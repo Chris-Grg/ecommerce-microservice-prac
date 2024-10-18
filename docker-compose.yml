@@ -20,6 +20,24 @@ services:
     command: npm run start:dev
     environment:
       - PORT=3001
+      - TYPEORM_HOST=localhost
+      - TYPEORM_PORT=3306
+      - TYPEORM_USERNAME=your_username
+      - TYPEORM_PASSWORD=your_password
+      - TYPEORM_DATABASE=users-database
+    depends_on:
+      - users-db
+
+  users-db:
+    image: mysql:latest
+    ports:
+      - "3307:3307"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootP@$$123
+      - MYSQL_DATABASE=users
+      - MYSQL_USER=testUser
+      - MYSQL_PASSWORD=testUserPassword@
+      - MYSQL_TCP_PORT=3307
 
 networks:
   app-network:
