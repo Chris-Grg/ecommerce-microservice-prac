@@ -8,6 +8,7 @@ export class ConfigurationService {
     private mysqlDatabase: string;
     private mysqlHost: string;
     private mysqlPort: number;
+    private rabbitmqUrl: string;
 
 
     constructor(private readonly configService: ConfigService) {
@@ -16,6 +17,7 @@ export class ConfigurationService {
         this.mysqlDatabase = configService.get<string>("MYSQL_DATABASE");
         this.mysqlHost = configService.get<string>("MYSQL_HOST");
         this.mysqlPort = configService.get<number>("MYSQL_PORT");
+        this.rabbitmqUrl = configService.get<string>("RABBITMQ_URL");
     }
     getMysqlUsername(): string {
         return this.mysqlUsername;
@@ -31,6 +33,10 @@ export class ConfigurationService {
     }
     getMysqlPort(): number {
         return this.mysqlPort;
+    }
+
+    getRabbitmqUrl(): string {
+        return this.rabbitmqUrl;
     }
 
 }

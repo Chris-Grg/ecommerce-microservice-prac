@@ -1,44 +1,64 @@
-import { Injectable } from "@nestjs/common";
-import { CreateUserDto } from "./dto/createUserDto";
-import { LoginDto } from "./dto/loginDto";
-import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "./typeorm/entities/User";
-import { Repository } from "typeorm";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateUserDto } from './dto/createUserDto';
+import { LoginDto } from './dto/loginDto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './typeorm/entities/User';
+import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-    constructor(@InjectRepository(User) private userRepository: Repository<User>) { }
-    private users = []
-    async createUser(createUserDto: CreateUserDto) {
-        const saltOrRounds = 10;
-        const hashedPassword = await bcrypt.hash(createUserDto.password, saltOrRounds);
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) { }
+  private users = [];
+  async createUser(createUserDto: CreateUserDto) {
+    const saltOrRounds = 10;
+    const hashedPassword = await bcrypt.hash(
+      createUserDto.password,
+      saltOrRounds,
+    );
 
-        const newUser = this.userRepository.create({
-            ...createUserDto,
-            password: hashedPassword,
-        });
-        return this.userRepository.save(newUser)
+    const newUser = this.userRepository.create({
+      ...createUserDto,
+      password: hashedPassword,
+    });
+    return this.userRepository.save(newUser);
+  }
+  async getHello() {
+    return 'Hello Welcome to world of microservices!';
+  }
+
+  async login(loginDto: LoginDto) {
+    const user = await this.userRepository.findOne({
+      where: { username: loginDto.username },
+    });
+
+    if (!user) {
+      return 'Invalid credentials';
     }
-    async getHello() {
-        return "Hello Welcome to world of microservices!"
+
+    const isPasswordValid = await bcrypt.compare(
+      loginDto.password,
+      user.password,
+    );
+
+    if (isPasswordValid) {
+      return 'Logged in successfully';
+    } else {
+      return 'Invalid credentials';
     }
+  }
 
-    async login(loginDto: LoginDto) {
-        const user = await this.userRepository.findOne({
-            where: { username: loginDto.username },
-        });
-
-        if (!user) {
-            return "Invalid credentials";
-        }
-
-        const isPasswordValid = await bcrypt.compare(loginDto.password, user.password);
-
-        if (isPasswordValid) {
-            return "Logged in successfully";
-        } else {
-            return "Invalid credentials";
-        }
-    }
+  async getAll() {
+    return await this.userRepository.find();
+  }
+  // async deleteUser(id: string) {
+  //   const exist = await this.userRepository.find({ where: { id: id } })
+  //   if (!exist) {
+  //     throw new NotFoundException(`User with ID ${id} not found`);
+  //   }
+  //   const result = await this.userRepository.delete(id);
+  //   return "user deleted successfully"
+  // }
 }

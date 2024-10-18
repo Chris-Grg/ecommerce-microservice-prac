@@ -23,9 +23,8 @@ import { User } from './typeorm/entities/User';
       password: 'testUserPassword@',
     }),
     TypeOrmModule.forFeature([User]),
-
   ],
   controllers: [UserController],
   providers: [UserService, ConfigurationService],
 })
-export class UserModule { }
+export class UserModule {}
