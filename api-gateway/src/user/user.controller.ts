@@ -12,6 +12,7 @@ import {
 import { ClientProxy } from '@nestjs/microservices';
 import { createUserDto } from './dto/createUserDto';
 import { loginDto } from './dto/loginDto';
+import { firstValueFrom } from 'rxjs';
 
 @Controller('users')
 export class UserController {
@@ -43,15 +44,16 @@ export class UserController {
     }
   }
 
-  // @Delete(':id')
-  // async deleteUser(@Param('id', ParseIntPipe) id: string) {
-  //   try {
-  //     return await this.userService.send({ cmd: 'deleteUser' }, id);
-  //   } catch (error) {
-  //     console.error(`::::ERROR::::${error}`);
-  //     throw new BadRequestException(error);
-  //   }
-  // }
+  @Delete(':id')
+  async deleteUser(@Param('id') id: string) {
+    console.log('id')
+    try {
+      return firstValueFrom(this.userService.send({ cmd: 'deleteUser' }, id))
+    } catch (error) {
+      console.error(`::::ERROR::::${error}`);
+      throw new BadRequestException(error);
+    }
+  }
 
   @Get()
   async getAll() {
