@@ -53,12 +53,12 @@ export class UserService {
   async getAll() {
     return await this.userRepository.find();
   }
-  // async deleteUser(id: string) {
-  //   const exist = await this.userRepository.find({ where: { id: id } })
-  //   if (!exist) {
-  //     throw new NotFoundException(`User with ID ${id} not found`);
-  //   }
-  //   const result = await this.userRepository.delete(id);
-  //   return "user deleted successfully"
-  // }
+  async deleteUser(id: string) {
+    const exist = await this.userRepository.find({ where: { id: id } })
+    if (!exist) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    const result = await this.userRepository.delete(id);
+    return "user deleted successfully"
+  }
 }

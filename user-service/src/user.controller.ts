@@ -34,18 +34,18 @@ export class UserController {
     return await this.userService.login(loginDto);
   }
 
-  // @MessagePattern({ cmd: 'deleteUser' })
-  // async deleteUser(id: string): Promise<String> {
-  //   try {
-  //     console.log('ID::::', JSON.stringify(id));
-  //     const res = await this.userService.deleteUser(id);
-  //     console.log(res);
-  //   } catch (err) {
-  //     console.error(err.message);
-  //     throw new BadRequestException(err);
-  //   }
-  //   return `Deleted id: ${JSON.parse(id)} Successfully`;
-  // }
+  @MessagePattern({ cmd: 'deleteUser' })
+  async deleteUser(id: string): Promise<String> {
+    try {
+      console.log('ID::::', JSON.stringify(id));
+      const res = await this.userService.deleteUser(id);
+      console.log(res);
+      return res
+    } catch (err) {
+      console.error(err.message);
+      throw new BadRequestException(err);
+    }
+  }
   @Get('/')
   welcomeMessage() {
     return 'Welcome to the user microservice!';
